@@ -189,4 +189,119 @@ void resetEEPROM() {
   kWh = 0.0;  // Reset kWh to 0
   cost = 0.0;  // Reset cost to 0
   saveEnergyDataToEEPROM();  // Save to EEPROM
+
 }
+
+Code Explanation – IoT Based Smart Energy Meter (ESP32)
+
+This section explains the working of the Smart Energy Meter code in a clear, step-by-step manner. The system measures electrical parameters, stores data securely, displays values locally, and sends data to cloud platforms for remote monitoring.
+
+Step 1: Blynk Platform Integration
+
+The project uses the Blynk IoT platform to display real-time electrical parameters such as voltage, current, power, energy units, and total cost.
+A Blynk template is created, and the ESP32 connects to it using authentication credentials. Virtual pins are used to send sensor data to the Blynk dashboard.
+
+Step 2: Library Initialization
+
+Multiple libraries are included to support different functionalities:
+
+Energy monitoring for voltage and current calculations
+
+WiFi connectivity for internet access
+
+Cloud communication with Blynk
+
+LCD display control using I2C
+
+EEPROM for non-volatile data storage
+
+HTTP and JSON handling for Telegram notifications
+
+Each library plays a specific role in enabling smooth system operation.
+
+Step 3: WiFi Connection Setup
+
+The ESP32 connects to a local WiFi network at startup.
+The system waits until a stable connection is established before proceeding, ensuring uninterrupted cloud communication.
+
+Step 4: LCD Display Initialization
+
+A 16×2 I2C LCD is initialized to display measured values locally.
+The LCD backlight is enabled, and the display is used to show real-time electrical parameters in a user-friendly format.
+
+Step 5: EEPROM Initialization and Data Recovery
+
+EEPROM is initialized to store energy consumption (kWh) and total cost permanently.
+When the system restarts or power is lost, previously stored values are retrieved from EEPROM, preventing data loss.
+
+Step 6: Voltage and Current Sensor Configuration
+
+The voltage sensor and ACS712 current sensor are configured using calibration constants.
+These calibration values ensure accurate measurement of RMS voltage and RMS current.
+
+Step 7: Energy and Cost Calculation Logic
+
+The ESP32 continuously calculates:
+
+RMS Voltage
+
+RMS Current
+
+Apparent Power
+
+Energy consumption is calculated by integrating power over time and converting it into kilowatt-hours (kWh).
+The electricity cost is then calculated using a predefined tariff rate per unit.
+
+Step 8: Periodic Task Scheduling
+
+Timers are used to perform tasks at fixed intervals:
+
+Sending updated sensor data to the Blynk dashboard
+
+Switching LCD display pages automatically
+
+Sending billing updates to Telegram
+
+This avoids blocking delays and ensures smooth multitasking.
+
+Step 9: Blynk Cloud Data Transmission
+
+Measured values are sent to the Blynk dashboard using virtual pins.
+Each parameter (voltage, current, power, energy units, and cost) is mapped to a specific widget for real-time visualization.
+
+Step 10: LCD Display Page Switching
+
+Due to limited screen size, the LCD alternates between two display pages:
+
+Page 1: Voltage, Current, and Power
+
+Page 2: Energy Consumption and Total Cost
+
+This improves readability without requiring user interaction.
+
+Step 11: Telegram Bill Notification System
+
+The system periodically sends energy usage and billing information to a Telegram chat using a bot.
+This feature allows users to receive billing updates remotely without opening the dashboard.
+
+Step 12: EEPROM Data Update
+
+After every energy calculation cycle, the latest energy and cost values are saved back into EEPROM.
+This ensures data persistence even during unexpected power failures.
+
+Step 13: Energy Reset Functionality
+
+A reset button is provided to clear stored energy and cost values.
+This is useful for monthly billing resets or system reinitialization.
+
+Step 14: Main Program Loop
+
+The main loop continuously:
+
+Maintains Blynk server communication
+
+Executes scheduled timer tasks
+
+Monitors the reset button
+
+This ensures uninterrupted monitoring and data transmission.
